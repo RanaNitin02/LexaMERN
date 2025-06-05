@@ -73,7 +73,7 @@ export const login = async(req, res) => {
             secure: false
         })
 
-        return res.status(200).json({ status: true, message: "User created successfully!", user });
+        return res.status(200).json({ status: true, message: "User logged in successfully!", user });
 
     } catch (error) {
         return res.status(500).json({ status: false, message: `Error login user: ${error.message}` });
