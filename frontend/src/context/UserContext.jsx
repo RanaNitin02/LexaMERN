@@ -1,12 +1,40 @@
-import React, { createContext } from 'react';
+import { createContext, useEffect } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 
 export const userDataContext = createContext();
 
 function UserContext({ children }) {
+
   const url = import.meta.env.VITE_BASE_URL;
 
+  const [userData, setUserData] = useState(null);
+
+  const [ frontendImage, setFrontendImage ] = useState(null);
+  const [ backendImage, setBackendImage ] = useState(null);
+  const [ selectedImage, setSelectedImage ] = useState(null);
+
+  const handleCurrentUser = async() => {
+    try {
+      const res = await axios.get(`${url}/user/current`, {
+        withCredentials: true
+      });
+      setUserData(res.data);
+      console.log('Current User Data:', res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    handleCurrentUser();
+  }, [])
+
   const value = {
-    url
+    url, userData, setUserData,
+    frontendImage, setFrontendImage,
+    backendImage, setBackendImage,
+    selectedImage, setSelectedImage
   };
 
   return (

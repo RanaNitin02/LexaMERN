@@ -17,7 +17,7 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { url } = useContext(userDataContext);
+  const { url, userData, setUserData } = useContext(userDataContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -28,10 +28,12 @@ const Signup = () => {
       const res = await axios.post(`${url}/auth/signup`, {
         name, email, password
       }, { withCredentials: true })
-      console.log(res.data);
+      setUserData(res.data);
       setLoading(false);
+      navigate('/customize'); 
     } catch (err) {
       console.log("error in signing up, frontend", err);
+      setUserData(null);
       setError(err.response.data.message);
       setLoading(false);
     }

@@ -15,7 +15,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { url } = useContext(userDataContext);
+  const { url, userData, setUserData } = useContext(userDataContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -28,10 +28,12 @@ const Login = () => {
         { email, password },
         { withCredentials: true }
       );
-      console.log(res.data);
+      setUserData(res.data);
       setLoading(false);
+      navigate('/');
     } catch (err) {
       console.log("Error in signing in, frontend", err);
+      setUserData(null);
       setError(err.response?.data?.message || "Login failed");
       setLoading(false);
     }
