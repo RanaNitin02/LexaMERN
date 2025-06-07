@@ -71,12 +71,6 @@ This AI Virtual Assistant can be integrated into various domains to enhance prod
 
 ---
 
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 ## 👨‍💻 Author
 
 **Nitin Rana**  
