@@ -20,7 +20,7 @@ function UserContext({ children }) {
         withCredentials: true
       });
       setUserData(res.data);
-      console.log('Current User Data:', res.data);
+      // console.log('Current User Data:', res.data);
     } catch (error) {
       console.log(error);
     }

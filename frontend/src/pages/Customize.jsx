@@ -9,6 +9,7 @@ import Card from '../components/Card.jsx'
 import { useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RiImageAddLine } from "react-icons/ri";
+import {MdKeyboardBackspace} from 'react-icons/md'
 import { userDataContext } from '../context/UserContext.jsx';
 
 
@@ -28,7 +29,8 @@ const Customize = () => {
     }
 
     return (
-        <div className='flex items-center justify-center flex-col w-full h-[100vh] bg-gradient-to-t from-[black] to-[#030353]'>
+        <div className='flex items-center justify-center flex-col w-full h-[100vh] bg-gradient-to-t from-[black] to-[#030353] relative'>
+            <MdKeyboardBackspace onClick={() => navigate("/")} className="top-[30px] left-[30px] text-white w-[25px] h-[25px] cursor-pointer absolute" />
             <h1 className='text-2xl font-semibold mb-[40px] text-white'>Select your <span className='text-blue-300'>Assistant Image</span></h1>
             <div className='w-full max-w-[900px] flex justify-center items-center flex-wrap gap-[15px]'>
                 <Card image={image1} />
