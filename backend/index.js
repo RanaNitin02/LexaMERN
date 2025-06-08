@@ -28,7 +28,7 @@ app.use("/api/v1/user", userRouter);
 //     let data = await geminiResponse(prompt);
 //     res.json(data)
 // })
- 
+
 app.listen(port,() => {
     connectDB();
     console.log(`Server started at port ${port}...`);

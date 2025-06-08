@@ -15,8 +15,8 @@ const App = () => {
   return (
     <Routes>
       <Route path='/' element={ (userData?.assistantName && userData?.assistantImage) ? <Home /> : <Navigate to={"/customize"}/> } />
-      <Route path='/login' element={ !userData ? <Login /> : <Navigate to={"/customize"} />} />
-      <Route path='/signup' element={ !userData ? <Signup /> : <Navigate to={"/customize"} />} />
+      <Route path='/login' element={ !userData ? <Login /> : <Navigate to={"/"} />} />
+      <Route path='/signup' element={ !userData ? <Signup /> : <Navigate to={"/"} />} />
       <Route path='/customize' element={ userData ? <Customize /> : <Navigate to={"/signup"} />} />
       <Route path='/customize2' element={ userData ? <Customize2 /> : <Navigate to={"/signup"} />} />
     </Routes>
