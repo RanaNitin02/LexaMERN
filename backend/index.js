@@ -5,6 +5,7 @@ import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
+import geminiResponse from './gemini.js';
 
 dotenv.config();
 
@@ -19,13 +20,15 @@ app.use(cors({
 }));
 
 
-app.get('/', (req,res)=>{
-    res.send("API is working")
-}) 
-
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 
+// app.get('/', async(req,res) => {
+//     let prompt = req.query.prompt;
+//     let data = await geminiResponse(prompt);
+//     res.json(data)
+// })
+ 
 app.listen(port,() => {
     connectDB();
     console.log(`Server started at port ${port}...`);
