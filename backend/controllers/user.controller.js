@@ -48,49 +48,71 @@ export const updateAssistant = async (req, res) => {
 
 
 export const askToAssistant = async (req, res) => {
-    try {
-        const { command } = req.body;
-        const user = await User.findById(req.userId).select("-password");
+  try {
+    const { command } = req.body;
 
-        const userName = user.name;
-        const assistantName = user.assistantName;
-
-        const geminiRes = await geminiResponse(command, assistantName, userName);
-
-        const jsonMatch = geminiRes.match(/{[\s\S]*}/);
-
-        if (!jsonMatch) {
-            return res.status(400).json({ message: "sorry! I can't understand" });
-        }
-
-        const gemResult = JSON.parse(jsonMatch[0]);
-        const type = gemResult.type;
-
-        switch (type) {
-            case 'get_date':
-                return res.json({ type, userInput: gemResult.userInput, response: `Today's date is ${moment().format('YYYY-MM-DD')}` });
-            case 'get_time':
-                return res.json({ type, userInput: gemResult.userInput, response: `Current time is ${moment().format('hh:mm A')}` });
-            case 'get_day':
-                return res.json({ type, userInput: gemResult.userInput, response: `Today is ${moment().format('dddd')}` });
-            case 'get_month':
-                return res.json({ type, userInput: gemResult.userInput, response: `Current month is ${moment().format('MMMM')}` });
-
-            case 'general':
-            case 'google_search':
-            case 'youtube_search':
-            case 'youtube_play':
-            case 'calculator_open':
-            case 'instagram_open':
-            case 'facebook_open':
-            case 'waether_show':
-                return res.json({ type, userInput: gemResult.userInput, response: gemResult.response });
-
-            default:
-                return res.status(400).json({ message: "I did not understand that command" });
-        }
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: "ask assistant error" });
+    // Validate input
+    if (!command || typeof command !== 'string' || !command.trim()) {
+      return res.status(400).json({ message: "Command is required." });
     }
-}
+
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Save command to history
+    user.history.push(command);
+    await user.save();
+
+    const userName = user.name;
+    const assistantName = user.assistantName;
+
+    // Call Gemini
+    const geminiRes = await geminiResponse(command, assistantName, userName);
+    const jsonMatch = geminiRes && geminiRes.match(/{[\s\S]*}/);
+
+    if (!jsonMatch) {
+      return res.status(400).json({ message: "Sorry! I can't understand." });
+    }
+
+    let gemResult;
+    try {
+      gemResult = JSON.parse(jsonMatch[0]);
+    } catch (parseError) {
+      console.error("Failed to parse Gemini response:", parseError);
+      return res.status(400).json({ message: "Invalid response from Gemini." });
+    }
+
+    const { type, userInput, response } = gemResult;
+
+    switch (type) {
+      case 'get-date':
+        return res.json({ type, userInput, response: `Today's date is ${moment().format('YYYY-MM-DD')}` });
+      case 'get-time':
+        return res.json({ type, userInput, response: `Current time is ${moment().format('hh:mm A')}` });
+      case 'get-day':
+        return res.json({ type, userInput, response: `Today is ${moment().format('dddd')}` });
+      case 'get-month':
+        return res.json({ type, userInput, response: `Current month is ${moment().format('MMMM')}` });
+
+      case 'general':
+      case 'google-search':
+      case 'youtube-search':
+      case 'youtube-play':
+      case 'calculator-open':
+      case 'instagram-open':
+      case 'facebook-open':
+      case 'weather-show':
+        return res.json({ type, userInput, response });
+
+      default:
+        return res.status(400).json({ message: "I did not understand that command." });
+    }
+
+  } catch (error) {
+    console.error("askToAssistant error:", error);
+    return res.status(500).json({ message: "ask assistant error" });
+  }
+};
+
