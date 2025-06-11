@@ -187,52 +187,72 @@ const Home = () => {
     };
   }, []);
 
-  return (
-    <div className='flex flex-col items-center justify-start w-full min-h-screen px-4 pt-6 bg-gradient-to-t from-black to-[#030353] gap-4 overflow-x-hidden'>
-      <TbMenu3 onClick={() => setHam(true)} className='lg:hidden text-white absolute top-5 right-5 w-6 h-6 cursor-pointer' />
-      
-      {/* Side Menu */}
-      <div className={`lg:hidden fixed top-0 w-full h-full bg-[#00000053] backdrop-blur-lg p-5 flex flex-col gap-4 items-start transition-transform z-50 ${ham ? 'translate-x-0' : 'translate-x-full'}`}>
-        <RxCross1 onClick={() => setHam(false)} className='text-white absolute top-5 right-5 w-6 h-6 cursor-pointer' />
-        <button
-          onClick={handleLogout}
-          className='w-full text-white font-semibold bg-blue-500 hover:bg-blue-800 rounded-full text-lg px-5 py-3'>
-          Log Out
-        </button>
-        <button
-          onClick={() => navigate('/customize')}
-          className='w-full text-white font-semibold bg-blue-500 hover:bg-blue-800 rounded-full text-lg px-5 py-3'>
-          Customize your assistant
-        </button>
+  
+  const renderSideContent = () => (
+    <div className='w-[250px] bg-[#0e0e1a] p-4 rounded-2xl shadow-lg'>
+      <button
+        onClick={handleLogout}
+        className='w-full text-white font-semibold bg-blue-500 hover:bg-blue-800 rounded-full text-lg px-5 py-3 mb-3'>
+        Log Out
+      </button>
+      <button
+        onClick={() => navigate('/customize')}
+        className='w-full text-white font-semibold bg-blue-500 hover:bg-blue-800 rounded-full text-lg px-5 py-3'>
+        Customize your assistant
+      </button>
 
-        <div className='w-full border-t border-gray-400 pt-4'>
-          <h1 className='text-white font-semibold text-lg mb-2'>History</h1>
-          <div className='flex flex-col gap-2 max-h-[300px] overflow-y-auto'>
-            {userData.history?.map((his, index) => (
-              <span key={index} className='text-gray-200 text-sm truncate'>{his}</span>
-            ))}
-          </div>
+      <div className='w-full border-t border-gray-400 pt-4 mt-4'>
+        <h1 className='text-white font-semibold text-lg mb-2'>History</h1>
+        <div className='flex flex-col gap-2 max-h-[300px] overflow-y-auto'>
+          {userData.history?.map((his, index) => (
+            <span key={index} className='text-gray-200 text-sm truncate'>{his}</span>
+          ))}
         </div>
       </div>
+    </div>
+  );
 
-      {/* Assistant Image */}
+  return (
+    <div className='flex flex-col items-center justify-center w-full min-h-screen px-4 pt-6 bg-gradient-to-t from-black to-[#030353] gap-4 overflow-x-hidden'>
+
+      
+      <TbMenu3
+        onClick={() => setHam(true)}
+        className='text-white absolute top-5 right-5 w-6 h-6 cursor-pointer z-50 lg:hidden'
+      />
+
+      
+      <div className={`lg:hidden fixed top-0 right-0 w-full h-full bg-[#00000080] backdrop-blur-sm p-5 flex flex-col gap-4 transition-transform duration-500 ease-in-out z-40 ${ham ? 'translate-x-0' : 'translate-x-full'}`}>
+        <RxCross1
+          onClick={() => setHam(false)}
+          className='text-white absolute top-5 right-5 w-6 h-6 cursor-pointer'
+        />
+        {renderSideContent()}
+      </div>
+
+      
+      <div className="hidden lg:flex flex-col gap-4 absolute top-6 right-6 items-end z-10">
+        {renderSideContent()}
+      </div>
+
+      
       <div className='w-full max-w-[280px] h-[320px] flex items-center justify-center overflow-hidden shadow-lg rounded-2xl'>
         <img src={userData?.assistantImage} className='w-full h-full object-cover rounded-2xl' />
       </div>
 
-      {/* Assistant Name */}
+      
       <h1 className='text-[18px] font-semibold text-white text-center'>
         I'm <span className='text-blue-500'>{userData?.assistantName}</span>
       </h1>
 
-      {/* Animation */}
+      
       {!aiText ? (
         <img src={userImage} className="w-[160px]" />
       ) : (
         <img src={aiImage} className="w-[160px]" />
       )}
 
-      {/* Text Display */}
+      
       <h1 className='text-[16px] font-medium text-white text-center px-2 break-words'>
         {userText || aiText || ''}
       </h1>
