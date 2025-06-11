@@ -5,14 +5,14 @@ const geminiResponse = async (command, assistantName, userName) => {
 
         const apiURL = process.env.GEMINI_API_URL;
 
-        const prompt = `
+        const prompt = ` 
             You are a virtual assistant named ${assistantName} created by ${userName}.
             You are not Google. You will now behave like a voice-enabled  assistant.
             Your task is to understand the user's natural language input and respond with a JSON object like this:
 
             {
-                "type" : general | "google_search" | "youtube_search" | "youtube_play" | "get_time" | "get_date" | "get_day" | "get_month" | "calculator_open" | "instagram_open" | "facbook-open" | "weather-show",
-                "userInput": "<original user input>" {only remove your name from userinput if exists} and agr kisi ne google ya youtube pr kuch search karne ko bola hai toh userinput me only wo search wala text jaaye,
+                "type" : general | "google-search" | "youtube-search" | "youtube-play" | "get-time" | "get-date" | "get-day" | "get-month" | "calculator-open" | "instagram-open" | "facebook-open" | "weather-show",
+                "userInput": "<original user input>" {only remove your name from userinput if exists} and agar kisi ne google ya youtube pr kuch search karne ko bola hai toh userInput me only wo search wala text jaaye,
                 "response" : <a short spoken response to read out loud to the user>"   
             }
 
@@ -22,7 +22,7 @@ const geminiResponse = async (command, assistantName, userName) => {
                 - "response": A short voice-friendly reply, e.g., "sure, playing it now", "Here's what i found", "Today is Tuesday", etc.
 
             Type meanings:
-                - "general": if it is factual or informational question. aur agr koi aisa question puchta hai jiska answer tumhe pata hai toh usko bhi general category me rakhna hai bas us question ka tumne short answer dena hai.
+                - "general": if it is factual or informational question. aur agr koi aisa question puchta hai jiska answer tumhe pata hai toh usko bhi general category me rakhna hai bas us question ka tumne answer dena hai.
                 - "google-search": if the user wants to search something on Google.
                 - "youtube-search": if the user wants to search something on YouTube.
                 - "youtube-play": if the user wants to play a YouTube video or song.
@@ -42,13 +42,13 @@ const geminiResponse = async (command, assistantName, userName) => {
             now your userInput - ${command} 
         `
 
-        const res = await axios.post(apiURL, {
+        const result = await axios.post(apiURL, {
             "contents": [{
                 "parts": [{ "text": prompt }]
             }]
         }) 
 
-        return res.data.candidates[0].content.parts[0].text;
+        return result.data.candidates[0].content.parts[0].text;
 
     } catch (error) {
         console.log("gemini api error", error);
