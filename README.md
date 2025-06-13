@@ -1,4 +1,4 @@
-# 🤖 AI Virtual Assistant – MERN Stack
+# 🤖 VirtuMate: AI Assistant – MERN Stack
 
 An intelligent AI-powered virtual assistant built with the MERN stack (MongoDB, Express.js, React.js, Node.js). This assistant is designed to help users perform tasks, answer questions, and interact through a seamless web interface.
 
