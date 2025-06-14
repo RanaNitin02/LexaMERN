@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { userDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Home = () => {
 
-  const { url, userData, setUserData } = useContext(userDataContext)
+  const { url, userData, setUserData, getGeminiResponse } = useContext(userDataContext)
 
   const navigate = useNavigate();
 
@@ -19,12 +19,38 @@ const Home = () => {
     } catch (error) {
       setUserData(null); 
       console.error("Error during logout:", error);
-      
     }
   }
 
+  const speak = (text) => {
+  const utterance = new SpeechSynthesisUtterance(text);
+  window.speechSynthesis.speak(utterance);
+}
+
+
+  useEffect(() => {
+
+    const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const recognition = new speechRecognition();
+    recognition.continuous = true;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = async(e) => {
+      const transcript = e.results[e.results.length - 1][0].transcript.trim();
+      console.log("heard:", transcript);
+
+      if( transcript.toLowerCase().includes(userData?.assistantName.toLowerCase()) ){
+        const data = await getGeminiResponse(transcript);
+        console.log(data);
+        speak(data.response);
+      }
+    }
+    recognition.start();     
+  }, [userData]);
+
   return (
-    <div className='w-full h-[100vh] bg-gradient-to-t from-[black] to-[#02023d] flex justify-center items-center flex-col gap-2'>
+    <div className='w-full h-[100vh] bg-gradient-to-t from-[black] to-[#02023d] flex justify-center items-center flex-col gap-4'>
       <button
           type="submit"
           onClick={handleLogout}

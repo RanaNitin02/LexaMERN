@@ -51,7 +51,7 @@ export const askToAssistant = async (req, res) => {
   try {
     const { command } = req.body;
 
-    // Validate input
+    
     if (!command || typeof command !== 'string' || !command.trim()) {
       return res.status(400).json({ message: "Command is required." });
     }
@@ -61,14 +61,13 @@ export const askToAssistant = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Save command to history
+    
     user.history.push(command);
     await user.save();
 
     const userName = user.name;
-    const assistantName = user.assistantName;
+    const assistantName = user.assistantName; 
 
-    // Call Gemini
     const geminiRes = await geminiResponse(command, assistantName, userName);
     const jsonMatch = geminiRes && geminiRes.match(/{[\s\S]*}/);
 
